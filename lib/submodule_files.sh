@@ -12,10 +12,10 @@ repo=${toplevel/#$root/}/$path
 repo=${repo/#\//}
 # We are only interested in submodules under home/
 if [[ $repo =~ ^home ]]; then
-	# just let cd fail if the path does not exist
-	# shellcheck disable=2164
-	cd "$toplevel/$path"
-	# List the files and prefix every line
-	# with the relative repo path
-	git ls-files | sed "s#^#${repo//#/\\#}/#"
+  # just let cd fail if the path does not exist
+  # shellcheck disable=2164
+  cd "$toplevel/$path"
+  # List the files and prefix every line
+  # with the relative repo path
+  git ls-files -z | sed 's#^\|\x00\(.\)#\x00'"${repo//'#'/'\#'}"'/\1#g'
 fi
